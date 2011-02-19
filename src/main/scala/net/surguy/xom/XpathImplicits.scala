@@ -23,23 +23,18 @@ object XpathImplicits {
 
   class PimpedNode(node: Node) {
     def selectNodes(query: String): Nodes = {
-      val factory = new XPathFactoryImpl()
-      val doc = new DocumentWrapper(node, null, factory.getConfiguration)
-      val xpath = factory.newXPath()
-      val expr = xpath.compile(query)
-
-      val result = expr.evaluate(doc, XPathConstants.NODESET)
-      val nodes : java.util.List[Node] = result.asInstanceOf[java.util.List[Node]]
-
-      val xomNodes: Nodes = new Nodes()
-      for (i <- (0 until nodes.size)) {
-        xomNodes.append( nodes.get(i).asInstanceOf[Node] )
-      }
-      xomNodes
+      val nodes = runQuery(query)
+      nodes.foldLeft(new Nodes())((xomNodes, node) => { xomNodes.append(node); xomNodes } )
     }
 
-    def selectSingleNode(xpath: String): Option[Node] = {
-      None
+    def selectSingleNode(query: String): Option[Node] = runQuery(query).headOption
+
+    private def runQuery(query: String): java.util.List[Node] = {
+      val factory = new XPathFactoryImpl()
+      val doc = new DocumentWrapper(node, null, factory.getConfiguration)
+      val expr = factory.newXPath().compile(query)
+
+      expr.evaluate(doc, XPathConstants.NODESET).asInstanceOf[java.util.List[Node]]
     }
   }
 

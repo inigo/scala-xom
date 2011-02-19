@@ -6,7 +6,7 @@ import java.io.StringReader
 import nu.xom.Builder
 
 /**
- * Test for XPath
+ * Test XPath implicits.
  *
  * @author Inigo Surguy
  * @created 19/02/2011 18:20
@@ -26,19 +26,20 @@ class XPathSpec extends SpecificationWithJUnit {
     }
   }
 
-  /*
   "calling selectSingleNode" should {
+    val xml = new Builder().build(new StringReader("<root>Some<b>XML</b> with <b>multiple bold</b> bits!</root>"))
     "return a populated Option when the selection exists" in {
-
+      xml.selectSingleNode("//b[matches(.,'X.*')]") must beSomething
     }
     "return None when there are no results" in {
-
+      xml.selectSingleNode("//no_such_element") must beNone
     }
-    "return None when there are multiple results" in {
-
+    "return the first result when there are multiple results" in {
+      xml.selectSingleNode("//b") must beSomething
     }
   }
 
+  /*
   "querying a document with namespaces" should {
     "find results when the namespace is specified" in {
 
