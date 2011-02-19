@@ -38,14 +38,4 @@ object XpathImplicits {
     }
   }
 
-  private def domToXom(node: dom.Node): nu.xom.Node = node match {
-    case n: Element => DOMConverter.convert(n)
-    case n: Text => DOMConverter.convert(n)
-    case n: ProcessingInstruction => DOMConverter.convert(n)
-    case n: Attr => DOMConverter.convert(n)
-    case n: Comment => DOMConverter.convert(n)
-    case n: Document => DOMConverter.convert(n)
-    case n: DocumentType => DOMConverter.convert(n)
-  }
-
 }
