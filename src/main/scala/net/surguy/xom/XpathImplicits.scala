@@ -23,12 +23,8 @@ object XpathImplicits {
 
   class PimpedNode(node: Node) {
     def selectNodes(query: String): Nodes = {
-      System.setProperty("javax.xml.xpath.XPathFactory:" + NamespaceConstant.OBJECT_MODEL_SAXON, "net.sf.saxon.xpath.XPathFactoryImpl")
-
-      val factory = XPathFactory.newInstance(NamespaceConstant.OBJECT_MODEL_SAXON)
-      val configuration = factory.asInstanceOf[XPathFactoryImpl].getConfiguration
-
-      val doc = new DocumentWrapper(node, null, configuration)
+      val factory = new XPathFactoryImpl()
+      val doc = new DocumentWrapper(node, null, factory.getConfiguration)
       val xpath = factory.newXPath()
       val expr = xpath.compile(query)
 

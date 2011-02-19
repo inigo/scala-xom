@@ -19,7 +19,7 @@ class XPathSpec extends SpecificationWithJUnit {
         xml.selectNodes("//b").size must beEqualTo(2)
     }
     "find multiple results for an XPath 2 query" in {
-      xml.selectNodes("//b").size must beEqualTo(2)
+      xml.selectNodes("//b[matches(.,'X.*')]").size must beEqualTo(1)
     }
     "return an empty list when there are no results" in {
       xml.selectNodes("//no_such_element").size must beEqualTo(0)
