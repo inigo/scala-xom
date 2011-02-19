@@ -1,14 +1,14 @@
 package net.surguy.xom
 
-import net.sf.saxon.om.NamespaceConstant
 import net.sf.saxon.xom.DocumentWrapper
 import net.sf.saxon.xpath.XPathFactoryImpl
 import nu.xom.{Nodes, Node}
-import javax.xml.xpath.{XPathConstants, XPathFactory}
-import nu.xom.converters.DOMConverter
+import javax.xml.xpath.XPathConstants
 import org.w3c.dom
 import dom._
 import scala.collection.JavaConversions._
+import net.sf.saxon.pull.NamespaceContextImpl
+import net.sf.saxon.om.InscopeNamespaceResolver
 
 /**
  * Make XPath2 available in XOM, via Saxon.
@@ -32,7 +32,10 @@ object XpathImplicits {
     private def runQuery(query: String): java.util.List[Node] = {
       val factory = new XPathFactoryImpl()
       val doc = new DocumentWrapper(node, null, factory.getConfiguration)
-      val expr = factory.newXPath().compile(query)
+      val context = new NamespaceContextImpl(new InscopeNamespaceResolver(doc.getRoot))
+      val xpath = factory.newXPath()
+      xpath.setNamespaceContext(context)
+      val expr = xpath.compile(query)
 
       expr.evaluate(doc, XPathConstants.NODESET).asInstanceOf[java.util.List[Node]]
     }

@@ -3,7 +3,7 @@ package net.surguy.xom
 import org.specs.SpecificationWithJUnit
 import net.surguy.xom.XpathImplicits._
 import java.io.StringReader
-import nu.xom.Builder
+import nu.xom.{Document, Builder}
 
 /**
  * Test XPath implicits.
@@ -14,7 +14,7 @@ import nu.xom.Builder
 class XPathSpec extends SpecificationWithJUnit {
 
   "querying a default-namespace XML document" should {
-    val xml = new Builder().build(new StringReader("<root>Some<b>XML</b> with <b>multiple bold</b> bits!</root>"))
+    val xml = toXom("<root>Some<b>XML</b> with <b>multiple bold</b> bits!</root>")
     "find multiple results for an XPath 1 query" in {
         xml.selectNodes("//b").size must beEqualTo(2)
     }
@@ -27,7 +27,7 @@ class XPathSpec extends SpecificationWithJUnit {
   }
 
   "calling selectSingleNode" should {
-    val xml = new Builder().build(new StringReader("<root>Some<b>XML</b> with <b>multiple bold</b> bits!</root>"))
+    val xml = toXom("<root>Some<b>XML</b> with <b>multiple bold</b> bits!</root>")
     "return a populated Option when the selection exists" in {
       xml.selectSingleNode("//b[matches(.,'X.*')]") must beSomething
     }
@@ -39,18 +39,19 @@ class XPathSpec extends SpecificationWithJUnit {
     }
   }
 
-  /*
   "querying a document with namespaces" should {
-    "find results when the namespace is specified" in {
-
+    val xml = toXom("<root xmlns=\"urn:something\" xmlns:a=\"urn:ns_a\">Some<b>XML</b> with <b>multiple bold</b> <a:em>bits!</a:em></root>")
+    "find results in the unprefixed namespace when the namespace context is using the default" in {
+      xml.selectNodes("//b").size must beEqualTo(2)
     }
-    "find nothing when no namespace is specfied" in {
-
+    "find results when the namespace prefix matches one defined in the document" in {
+      xml.selectNodes("//a:em").size must beEqualTo(1)
     }
-    "find nothing when an incorrect namespace is specified" in {
-
+    "find nothing when an unbound namespace prefix is specified" in {
+      xml.selectNodes("//z:em").size must beEqualTo(0)
     }
   }
-  */
+
+  private def toXom(xml: String): Document = new Builder().build(new StringReader(xml))
 
 }
