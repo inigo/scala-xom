@@ -3,7 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>net.surguy</groupId>
     <artifactId>scala-xom</artifactId>
     <version>0.1</version>
@@ -69,14 +68,15 @@
     </build>
 
     <dependencies>
-
-
+        <!-- XOM -->
         <dependency>
             <groupId>xom</groupId>
             <artifactId>xom</artifactId>
             <version>1.2.5</version>
         </dependency>
-        
+
+        <!-- Saxon, needed for XPath 2. Not available on Maven Central; download and install separately from
+                http://sourceforge.net/projects/saxon/files/Saxon-B/9.1.0.8/ -->
         <dependency>
             <groupId>net.sourceforge.saxon</groupId>
             <artifactId>saxonb</artifactId>
@@ -95,17 +95,19 @@
             <version>9.1.0.8</version>
         </dependency>
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.2</version>
-        </dependency>
-
         <!-- Scala -->
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.2</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
