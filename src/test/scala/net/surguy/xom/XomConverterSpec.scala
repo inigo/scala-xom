@@ -83,11 +83,11 @@ class XomConverterSpec  extends SpecificationWithJUnit {
   "using implicits" should {
     "allow Scala XML to be converted to XOM" in {
       val scalaXml = <root>Some content</root>
-      scalaXml.toXom() must haveClass[XomNode]
+      scalaXml.toXom() must haveSuperClass[XomNode]
     }
     "allow XOM to be converted to Scala XML" in {
       val xomXml = new Builder().build(new StringReader("<root>Some content</root>"))
-      xomXml.toScalaXml() must haveClass[Node]
+      xomXml.toScalaXml() must haveSuperClass[Node]
     }
   }
 
