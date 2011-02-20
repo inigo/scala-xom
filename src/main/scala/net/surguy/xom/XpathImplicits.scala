@@ -45,14 +45,10 @@ object XpathImplicits {
   private class LocalNamespaceContext(lookup: Map[String, String]) extends NamespaceContext {
     def getPrefixes(uri: String) = throw new UnsupportedOperationException()
     def getPrefix(uri: String) = throw new UnsupportedOperationException()
-    def getNamespaceURI(prefix: String) = {
-      if (lookup.containsKey(prefix)) {
-        lookup(prefix)
-      } else if (prefix=="xml") {
-        "http://www.w3.org/XML/1998/namespace"
-      } else {
-        ""
-      }
+    def getNamespaceURI(prefix: String) = prefix match {
+      case p if lookup.containsKey(prefix) => lookup(p)
+      case "xml" => "http://www.w3.org/XML/1998/namespace"
+      case _ => ""
     }
   }
 
