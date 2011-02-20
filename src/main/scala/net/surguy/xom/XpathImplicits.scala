@@ -9,6 +9,8 @@ import dom._
 import scala.collection.JavaConversions._
 import net.sf.saxon.pull.NamespaceContextImpl
 import net.sf.saxon.om.InscopeNamespaceResolver
+import javax.xml.namespace.NamespaceContext
+import java.lang.String
 
 /**
  * Make XPath2 available in XOM, via Saxon.
@@ -22,22 +24,35 @@ object XpathImplicits {
   implicit def PimpWithGetDocument(node: Node) = new PimpedNode(node)
 
   class PimpedNode(node: Node) {
-    def selectNodes(query: String): Nodes = {
-      val nodes = runQuery(query)
+    def selectNodes(query: String, context:Map[String, String] = Map()): Nodes = {
+      val nodes = runQuery(query, context)
       nodes.foldLeft(new Nodes())((xomNodes, node) => { xomNodes.append(node); xomNodes } )
     }
 
-    def selectSingleNode(query: String): Option[Node] = runQuery(query).headOption
+    def selectSingleNode(query: String, context:Map[String, String] = Map()): Option[Node] = runQuery(query, context).headOption
 
-    private def runQuery(query: String): java.util.List[Node] = {
+    private def runQuery(query: String, context: Map[String, String]): java.util.List[Node] = {
       val factory = new XPathFactoryImpl()
       val doc = new DocumentWrapper(node, null, factory.getConfiguration)
-      val context = new NamespaceContextImpl(new InscopeNamespaceResolver(doc.getRoot))
       val xpath = factory.newXPath()
-      xpath.setNamespaceContext(context)
+      xpath.setNamespaceContext(new LocalNamespaceContext(context))
       val expr = xpath.compile(query)
 
       expr.evaluate(doc, XPathConstants.NODESET).asInstanceOf[java.util.List[Node]]
+    }
+  }
+
+  private class LocalNamespaceContext(lookup: Map[String, String]) extends NamespaceContext {
+    def getPrefixes(uri: String) = throw new UnsupportedOperationException()
+    def getPrefix(uri: String) = throw new UnsupportedOperationException()
+    def getNamespaceURI(prefix: String) = {
+      if (lookup.containsKey(prefix)) {
+        lookup(prefix)
+      } else if (prefix=="xml") {
+        "http://www.w3.org/XML/1998/namespace"
+      } else {
+        ""
+      }
     }
   }
 
