@@ -6,7 +6,7 @@ import java.io.StringReader
 import nu.xom.{Document, Builder}
 
 /**
- * Test XPath implicits.
+ * Test using XOM with Saxon XPath via implicits.
  *
  * @author Inigo Surguy
  * @created 19/02/2011 18:20

@@ -9,33 +9,44 @@ import javax.xml.namespace.NamespaceContext
 import java.lang.String
 
 /**
+ * Add the XPath 2 methods to the XOM node via implicits.
+ *
+ * @author Inigo Surguy
+ * @created 19/02/2011 18:11
+ */
+object XpathImplicits {
+  implicit def PimpWithXPath(node: Node) = new {
+    def selectNodes(query: String)(implicit context:Map[String, String] = Map()): Nodes =
+      XomXPath.selectNodes(node, query)(context)
+
+    def selectSingleNode(query: String)(implicit context:Map[String, String] = Map()): Option[Node] =
+      XomXPath.selectSingleNode(node, query)(context)
+  }
+}
+
+/**
  * Make XPath2 available in XOM, via Saxon.
  *
  * @author Inigo Surguy
  * @created 19/02/2011 18:11
  */
+object XomXPath {
+  def selectNodes(node: Node, query: String)(implicit context:Map[String, String] = Map()): Nodes = {
+    val nodes = runQuery(node, query, context)
+    nodes.foldLeft(new Nodes())((xomNodes, node) => { xomNodes.append(node); xomNodes } )
+  }
 
-object XpathImplicits {
+  def selectSingleNode(node: Node, query: String)(implicit context:Map[String, String] = Map()): Option[Node] =
+    runQuery(node, query, context).headOption
 
-  implicit def PimpWithGetDocument(node: Node) = new PimpedNode(node)
+  private def runQuery(node: Node, query: String, context: Map[String, String]): java.util.List[Node] = {
+    val factory = new XPathFactoryImpl()
+    val doc = new DocumentWrapper(node, null, factory.getConfiguration)
+    val xpath = factory.newXPath()
+    xpath.setNamespaceContext(new LocalNamespaceContext(context))
+    val expr = xpath.compile(query)
 
-  class PimpedNode(node: Node) {
-    def selectNodes(query: String)(implicit context:Map[String, String] = Map()): Nodes = {
-      val nodes = runQuery(query, context)
-      nodes.foldLeft(new Nodes())((xomNodes, node) => { xomNodes.append(node); xomNodes } )
-    }
-
-    def selectSingleNode(query: String)(implicit context:Map[String, String] = Map()): Option[Node] = runQuery(query, context).headOption
-
-    private def runQuery(query: String, context: Map[String, String]): java.util.List[Node] = {
-      val factory = new XPathFactoryImpl()
-      val doc = new DocumentWrapper(node, null, factory.getConfiguration)
-      val xpath = factory.newXPath()
-      xpath.setNamespaceContext(new LocalNamespaceContext(context))
-      val expr = xpath.compile(query)
-
-      expr.evaluate(doc, XPathConstants.NODESET).asInstanceOf[java.util.List[Node]]
-    }
+    expr.evaluate(doc, XPathConstants.NODESET).asInstanceOf[java.util.List[Node]]
   }
 
   private class LocalNamespaceContext(lookup: Map[String, String]) extends NamespaceContext {
@@ -47,5 +58,4 @@ object XpathImplicits {
       case _ => ""
     }
   }
-
 }

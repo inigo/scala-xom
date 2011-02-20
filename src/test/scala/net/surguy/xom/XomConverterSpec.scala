@@ -7,8 +7,9 @@ import nu.xom.canonical.Canonicalizer
 import java.io.{ByteArrayOutputStream, StringReader}
 import scala.xml
 import xml.parsing.ConstructingParser
-import xml.XML
 import io.Source
+import Implicits._
+import xml.{Node, XML}
 
 /**
  * Test converting between the Scala XML form and XOM.
@@ -76,6 +77,17 @@ class XomConverterSpec  extends SpecificationWithJUnit {
     }
     "produce identical results for namespaced attributes in prefixed namespaces" in {
       testScalaConversion("<root xmlns:a=\"urn:test\">Some <b a:value=\"one\">element</b></root>")
+    }
+  }
+
+  "using implicits" should {
+    "allow Scala XML to be converted to XOM" in {
+      val scalaXml = <root>Some content</root>
+      scalaXml.toXom() must be[XomNode]
+    }
+    "allow XOM to be converted to Scala XML" in {
+      val xomXml = new Builder().build(new StringReader("<root>Some content</root>"))
+      xomXml.toScalaXml() must be[Node]
     }
   }
 
