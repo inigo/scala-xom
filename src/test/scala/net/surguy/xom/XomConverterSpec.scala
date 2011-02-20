@@ -41,6 +41,9 @@ class XomConverterSpec  extends SpecificationWithJUnit {
     "produce identical results for namespaced elements in prefixed namespaces" in {
       testConversion("<root xmlns:a=\"urn:test\">Some <a:b>element</a:b></root>")
     }
+    "produce identical results for multiple namespaced elements in prefixed namespaces" in {
+      testConversion("<root xmlns:a=\"urn:test\" xmlns:b=\"urn:test2\">Some <a:x><b:y/>element<c:z xmlns:c=\"urn:test3\"/></a:x></root>")
+    }
     "produce identical results for namespaced attributes in prefixed namespaces" in {
       testConversion("<root xmlns:a=\"urn:test\">Some <b a:value=\"one\">element</b></root>")
     }
@@ -56,7 +59,9 @@ class XomConverterSpec  extends SpecificationWithJUnit {
 
   private def canonical(xml: XomNode): String = {
     val out = new ByteArrayOutputStream()
-    new Canonicalizer(out).write(xml)
+    // Canonicalizer.EXCLUSIVE_XML_CANONICALIZATION_WITH_COMMENTS fixes up the namespaces appropriately
+    val canon = new Canonicalizer(out, Canonicalizer.EXCLUSIVE_XML_CANONICALIZATION_WITH_COMMENTS)
+    canon.write(xml)
     out.toString("UTF-8")
   }
 }

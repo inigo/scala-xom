@@ -14,8 +14,11 @@ object XomConverter {
 
   def toXom(node: Node) : XomNode = node match {
     case Elem(prefix, label, attributes, scope, children @ _*) =>
-      val xomElement = if (prefix==null) new XomElement(label) else new XomElement(prefix+":"+label, scope.getURI(prefix))
-      attributes.foreach(a => xomElement.addAttribute(new XomAttribute(a.key, a.value.text)))
+      val xomElement = if (scope.getURI(prefix)==null) new XomElement(label) else new XomElement(prefixed(prefix,label), scope.getURI(prefix))
+      for (att <- attributes) att match {
+        case a: PrefixedAttribute => xomElement.addAttribute(new XomAttribute(a.prefixedKey, scope.getURI(a.pre), a.value.text))
+        case a: UnprefixedAttribute => xomElement.addAttribute(new XomAttribute(a.key, a.value.text))
+      }
       children.foreach(e => xomElement.appendChild(toXom(e)))
       xomElement
     case Text(text) => new XomText(text)
@@ -27,5 +30,7 @@ object XomConverter {
     case Unparsed(text) => throw new UnsupportedOperationException("XOM does not support unparsed entities")
     case _ => throw new UnsupportedOperationException("Cannot convert "+node+" type "+node.getClass.getName+" to XOM")
   }
+
+  private def prefixed(prefix: String, label: String) = if (prefix==null) label else prefix+":"+label
 
 }
