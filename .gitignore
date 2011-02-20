@@ -1,0 +1,7 @@
+target
+.idea
+lib_managed
+project/boot
+project/build/target
+scala-xom.iml
+*.swp
