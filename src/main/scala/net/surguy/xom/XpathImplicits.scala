@@ -4,11 +4,7 @@ import net.sf.saxon.xom.DocumentWrapper
 import net.sf.saxon.xpath.XPathFactoryImpl
 import nu.xom.{Nodes, Node}
 import javax.xml.xpath.XPathConstants
-import org.w3c.dom
-import dom._
 import scala.collection.JavaConversions._
-import net.sf.saxon.pull.NamespaceContextImpl
-import net.sf.saxon.om.InscopeNamespaceResolver
 import javax.xml.namespace.NamespaceContext
 import java.lang.String
 
