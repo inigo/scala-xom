@@ -42,13 +42,17 @@ class XPathSpec extends SpecificationWithJUnit {
   "querying a document with namespaces" should {
     val xml = toXom("<root xmlns=\"urn:something\" xmlns:a=\"urn:ns_a\">Some<b>XML</b> with <b>multiple bold</b> <a:em>bits!</a:em></root>")
     "find results in the unprefixed namespace when the namespace context maps it to a prefix" in {
-      xml.selectNodes("//d:b", Map("d" -> "urn:something")).size must beEqualTo(2)
+      xml.selectNodes("//d:b")(Map("d" -> "urn:something")).size must beEqualTo(2)
     }
     "find results when the namespace prefix matches one defined in the document" in {
-      xml.selectNodes("//a:em", Map("a" -> "urn:ns_a")).size must beEqualTo(1)
+      xml.selectNodes("//a:em")(Map("a" -> "urn:ns_a")).size must beEqualTo(1)
     }
     "find nothing when an unbound namespace prefix is specified" in {
-      xml.selectNodes("//z:em", Map("a" -> "urn:ns_a")).size must beEqualTo(0)
+      xml.selectNodes("//z:em")(Map("a" -> "urn:ns_a")).size must beEqualTo(0)
+    }
+    "use an implicit namespace context if available" in {
+      implicit val context = Map("a" -> "urn:ns_a")
+      xml.selectNodes("//a:em").size must beEqualTo(1)
     }
   }
 

@@ -24,12 +24,12 @@ object XpathImplicits {
   implicit def PimpWithGetDocument(node: Node) = new PimpedNode(node)
 
   class PimpedNode(node: Node) {
-    def selectNodes(query: String, context:Map[String, String] = Map()): Nodes = {
+    def selectNodes(query: String)(implicit context:Map[String, String] = Map()): Nodes = {
       val nodes = runQuery(query, context)
       nodes.foldLeft(new Nodes())((xomNodes, node) => { xomNodes.append(node); xomNodes } )
     }
 
-    def selectSingleNode(query: String, context:Map[String, String] = Map()): Option[Node] = runQuery(query, context).headOption
+    def selectSingleNode(query: String)(implicit context:Map[String, String] = Map()): Option[Node] = runQuery(query, context).headOption
 
     private def runQuery(query: String, context: Map[String, String]): java.util.List[Node] = {
       val factory = new XPathFactoryImpl()
