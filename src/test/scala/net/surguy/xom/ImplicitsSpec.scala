@@ -2,8 +2,9 @@ package net.surguy.xom
 
 import org.specs.SpecificationWithJUnit
 import Implicits._
-import nu.xom.{Attribute => XomAttribute, Element => XomElement, Node => XomNode, Text => XomText, Comment => XomComment,
-              ProcessingInstruction => XomProcessingInstruction, Document => XomDocument, Nodes => XomNodes}
+import nu.xom.{Builder, Attribute => XomAttribute, Element => XomElement, Node => XomNode, Text => XomText, Comment => XomComment, ProcessingInstruction => XomProcessingInstruction, Document => XomDocument, Nodes => XomNodes}
+import xml.Elem
+import java.io.StringReader
 
 /**
  * Test the implicits that pimp XOM nodes.
@@ -14,7 +15,7 @@ import nu.xom.{Attribute => XomAttribute, Element => XomElement, Node => XomNode
 class ImplicitsSpec extends SpecificationWithJUnit {
 
   "using implicits for XOM nodes" should {
-    val xml: XomElement = (<root x="1" y="2"><a/><b><c/> text </b>some text</root>).toXom.asInstanceOf[XomElement]
+    val xml: XomElement = (<root x="1" y="2"><a/><b><c/> text </b>some text</root>).toXom
     "allow looping through child elements" in {
       xml.elements.size must beEqualTo(2)
       println(xml.elements.toString)
@@ -25,6 +26,17 @@ class ImplicitsSpec extends SpecificationWithJUnit {
     }
     "allow looping through children" in {
       xml.nodes.size must beEqualTo(3)
+    }
+  }
+
+  "Converting specific classes to and from XOM" should {
+    "return XomElement for Elem" in {
+      val xml: XomElement = <root/>.toXom
+      xml must haveClass[XomElement]
+    }
+    "return Elem for XomElement" in {
+      val xml: Elem = new Builder().build(new StringReader("<root/>")).getRootElement.toScalaXml
+      xml must haveClass[Elem]
     }
   }
 
