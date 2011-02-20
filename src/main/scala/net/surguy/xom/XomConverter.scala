@@ -39,8 +39,15 @@ object XomConverter {
       val xomAttributes = for (i <- (0 until n.getAttributeCount)) yield n.getAttribute(i)
       val attributes = xomAttributes.foldLeft(Null.asInstanceOf[MetaData])((existing, a) =>
         Attribute(a.getNamespacePrefix, a.getLocalName, Text(a.getValue), existing ))
-      val xomChildren = for (i <- (0 until n.getChildCount)) yield toScalaXml(n.getChild(i))
-      new Elem(if (n.getNamespacePrefix=="") null else n.getNamespacePrefix, n.getLocalName, attributes, TopScope, xomChildren :_* )
+
+      val children = for (i <- (0 until n.getChildCount)) yield toScalaXml(n.getChild(i))
+
+      val xomNamespaces = for (i <- (0 until n.getNamespaceDeclarationCount))
+        yield (n.getNamespacePrefix(i), n.getNamespaceURI(n.getNamespacePrefix(i)))
+      val namespaces = xomNamespaces.foldLeft(TopScope.asInstanceOf[NamespaceBinding])((existing, ns) =>
+        NamespaceBinding(if (ns._1=="") null else ns._1, ns._2, existing))
+
+      new Elem(if (n.getNamespacePrefix=="") null else n.getNamespacePrefix, n.getLocalName, attributes, namespaces, children :_* )
     case n: XomText => Text(n.getValue)
     case n: XomComment => Comment(n.getValue)
     case n: XomProcessingInstruction => ProcInstr(n.getTarget, n.getValue)

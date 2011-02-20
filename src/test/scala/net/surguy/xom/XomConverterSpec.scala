@@ -92,7 +92,6 @@ class XomConverterSpec  extends SpecificationWithJUnit {
     val scalaXml = ConstructingParser.fromSource(Source.fromString(xml), true).document.docElem
     val xomXml = new Builder().build(new StringReader(xml))
     val convertedToScala = XomConverter.toScalaXml(xomXml)
-    println(convertedToScala)
     scalaXml must beEqualTo(convertedToScala)
     canonical(xomXml.getRootElement) must beEqualTo(canonical(XomConverter.toXom(convertedToScala)))
   }
