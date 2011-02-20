@@ -44,7 +44,7 @@ object Implicits {
   }
 
   implicit def PimpWithToXom(node: Elem) = new {
-    def toXom(): XomElement = XomConverter.toXom(node).asInstanceOf[XomElement]
+    def toXom(): XomDocument = XomConverter.toXomDocument(node).asInstanceOf[XomDocument]
   }
 
 }

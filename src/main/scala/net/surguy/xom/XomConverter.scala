@@ -12,6 +12,8 @@ import nu.xom.{Attribute => XomAttribute, Element => XomElement, Node => XomNode
  */
 object XomConverter {
 
+  def toXomDocument(elem: Elem): XomDocument = new XomDocument( toXom(elem).asInstanceOf[XomElement] )
+
   def toXom(node: Node) : XomNode = node match {
     case Elem(prefix, label, attributes, scope, children @ _*) =>
       val xomElement = if (scope.getURI(prefix)==null) new XomElement(label) else new XomElement(prefixed(prefix,label), scope.getURI(prefix))

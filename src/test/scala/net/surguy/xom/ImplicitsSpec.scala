@@ -15,10 +15,9 @@ import java.io.StringReader
 class ImplicitsSpec extends SpecificationWithJUnit {
 
   "using implicits for XOM nodes" should {
-    val xml: XomElement = (<root x="1" y="2"><a/><b><c/> text </b>some text</root>).toXom
+    val xml: XomElement = (<root x="1" y="2"><a/><b><c/> text </b>some text</root>).toXom.getRootElement
     "allow looping through child elements" in {
       xml.elements.size must beEqualTo(2)
-      println(xml.elements.toString)
     }
     "allow looping through attributes" in {
       xml.attributes.size must beEqualTo(2)
@@ -31,8 +30,8 @@ class ImplicitsSpec extends SpecificationWithJUnit {
 
   "Converting specific classes to and from XOM" should {
     "return XomElement for Elem" in {
-      val xml: XomElement = <root/>.toXom
-      xml must haveClass[XomElement]
+      val xml: XomDocument = <root/>.toXom
+      xml must haveClass[XomDocument]
     }
     "return Elem for XomElement" in {
       val xml: Elem = new Builder().build(new StringReader("<root/>")).getRootElement.toScalaXml
