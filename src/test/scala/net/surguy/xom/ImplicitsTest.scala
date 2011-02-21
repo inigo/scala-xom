@@ -12,7 +12,7 @@ import java.io.StringReader
  * @author Inigo Surguy
  * @created 20/02/2011 17:16
  */
-class ImplicitsSpec extends SpecificationWithJUnit {
+class ImplicitsTest extends SpecificationWithJUnit {
 
   "using implicits for XOM nodes" should {
     val xml: XomElement = (<root x="1" y="2"><a/><b><c/> text </b>some text</root>).toXom.getRootElement

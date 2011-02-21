@@ -11,7 +11,7 @@ import nu.xom.{Document, Builder}
  * @author Inigo Surguy
  * @created 19/02/2011 18:20
  */
-class XPathSpec extends SpecificationWithJUnit {
+class XPathTest extends SpecificationWithJUnit {
 
   "querying a default-namespace XML document" should {
     val xml = toXom("<root>Some<b>XML</b> with <b>multiple bold</b> bits!</root>")

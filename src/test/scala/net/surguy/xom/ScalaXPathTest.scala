@@ -9,7 +9,7 @@ import Implicits._
  * @author Inigo Surguy
  * @created 20/02/2011 19:18
  */
-class ScalaXPathSpec extends SpecificationWithJUnit {
+class ScalaXPathTest extends SpecificationWithJUnit {
 
   "applying XPath" should {
     "return results when applied to converted Scala XML" in {

@@ -18,7 +18,7 @@ import xml.{Node, XML}
  * @created 20/02/2011 12:58
  */
 
-class XomConverterSpec  extends SpecificationWithJUnit {
+class XomConverterTest  extends SpecificationWithJUnit {
 
   "converting from Scala XML to XOM" should {
     "produce identical results for a single element containing text" in {
