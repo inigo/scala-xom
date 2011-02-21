@@ -5,10 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.surguy</groupId>
     <artifactId>scala-xom</artifactId>
+    <packaging>jar</packaging>
     <version>0.1</version>
 
     <name>scala-xom</name>
     <description>Scala implicits to make using the XOM XML library easier in Scala, and to make using Saxon's XPath 2 support easier.</description>
+    <url>https://github.com/inigo/scala-xom</url>
 
     <properties>
         <scala.version>2.8.1</scala.version>
