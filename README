@@ -33,10 +33,7 @@ This library depends on XOM and on Saxon-B. It should also be compatible with
 Saxon-SA.  It is not compatible with the latest version of Saxon, Saxon-HE, 
 which has removed support for models like XOM. 
 
-This library can be built with Maven or with SBT. However, Saxon is not available
-on Maven Central, and is not likely to be added. Before building, download it 
-from http://sourceforge.net/projects/saxon/files/Saxon-B/9.1.0.8/ and
-add it to your local Maven repository manually.
+This library can be built with Maven or with SBT. 
 
 Licensing
 ---------
