@@ -1,0 +1,51 @@
+<body>
+<p>
+Scala implicits to make using the XOM XML library easier in Scala, and
+to make using Saxon's XPath 2 support easier.
+</p>
+<h2>Usage</h2>
+<p>
+<code><pre>
+    import net.surguy.xom.Implicits._
+    import scala.xml._
+
+    // Create Scala XML objects as normal
+    val scalaXml = &lt;root&gt;Some text about &lt;b&gt;XML&lt;/b&gt; and &lt;b&gt;other things&lt;/b&gt;&lt;/root&gt;
+
+    // Convert them to XOM
+    val xomXml = scalaXml.toXom
+    
+    // Use XPath 2 from Saxon against them
+    val foundNodes = xomXml.selectNodes("//b[matches(.,'X.*')]") 
+
+    // Use Scala iterators with XOM
+    xomXml.elements.foreach( _.addAttribute(new nu.xom.Attribute("new","value")) )
+
+    // Convert XOM to Scala
+    xomXml.toScalaXml
+</pre></code>
+</p><p>
+Note that the conversion from Scala XML to XOM, and from XOM to Saxon's OM, is
+not hugely inefficient but any process that converts XML between formats multiple
+times is not going to be particularly performant.
+</p>
+<h2>Build and dependencies</h2>
+<p>
+This library depends on XOM and on Saxon-B. It should also be compatible with 
+Saxon-SA.  It is not compatible with the latest version of Saxon, Saxon-HE, 
+which has removed support for models like XOM. 
+</p><p>
+This library can be built with Maven or with SBT. 
+</p>
+<h2>Licensing</h2>
+<p>
+This code is under the Apache software license, version 2. See
+http://www.apache.org/licenses/LICENSE-2.0 for the full license.
+</p><p>
+This code uses the XOM XML library from Elliotte Rusty Harold, available at
+http://www.xom.nu/, and licensed under the LGPL.
+</p><p>
+It also uses the SAXON XSLT Processor from Michael Kay, available at
+http://saxon.sourceforge.net/, licensed under the MPL 1.0.
+</p>
+</body>
